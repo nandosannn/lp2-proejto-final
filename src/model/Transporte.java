@@ -45,7 +45,4 @@ public class Transporte {
         return "Transporte [id=" + id + ", nomeMotorista=" + nomeMotorista + ", telefone=" + telefone
                 + ", modeloVeículo=" + modeloVeículo + "]";
     }
-
-    
-    
 }

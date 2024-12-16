@@ -45,13 +45,13 @@ CREATE TABLE IF NOT EXISTS `evento` (
 
 -- Inserção de registros padrão para chave estrangeira
 INSERT INTO `grupo` (`codigo`, `nome`, `coordenador`, `telefone_coordenador`, `quantidade_de_musicos`) VALUES
-(NULL, 'Padrão', 'Coordenador Padrão', '0000-0000', 0);
+(NULL, 'Aguardando disponibilidade de grupo', 'Coordenador Padrão', '0000-0000', 0);
 
 INSERT INTO `transporte` (`codigo`, `nome_motorista`, `telefone`, `tipo_do_veiculo`) VALUES
-(NULL, 'Motorista Padrão', '0000-0000', 'Desconhecido');
+(NULL, 'Aguardando confirmação de transporte', '0000-0000', 'Desconhecido');
 
 INSERT INTO `solicitante` (`codigo`, `nome`, `cargo`, `telefone`, `email`) VALUES
-(NULL, 'Solicitante Padrão', 'Cargo Padrão', '0000-0000', 'padrao@exemplo.com');
+(NULL, 'Aguardando informações de solicitante', 'Cargo Padrão', '0000-0000', 'padrao@exemplo.com');
 
 -- Atualizando chaves estrangeiras padrão para referências
 ALTER TABLE `evento`
