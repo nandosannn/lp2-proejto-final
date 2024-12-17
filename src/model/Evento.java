@@ -23,6 +23,9 @@ public class Evento {
     private Transporte transporte;
     private Solicitante solicitante;
     
+    public Evento(){
+        
+    }
     
     public Evento(String nome, String local, LocalDateTime dataHora, Grupo grupo, Status status, Transporte transporte,
             Solicitante solicitante) {

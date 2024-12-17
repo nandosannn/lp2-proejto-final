@@ -7,6 +7,11 @@ public class Grupo {
     private String telefoneCoordenador;
     private Integer quantidadeMusicos;
    
+
+    public Grupo(){
+
+    }
+    
     public Grupo(String nome, String nomeCoordenador, String telefoneCoordenador,
             Integer quantidadeMusicos) {
         this.nome = nome;

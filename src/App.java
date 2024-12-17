@@ -33,6 +33,7 @@ public class App {
                     String login = input.nextLine();
                     System.out.print("Digite a senha: ");
                     String senha = input.nextLine();
+                    
                     if (adm.validarLogin(login, senha)) {
                         System.out.println("Login feito com sucesso");
                     }
