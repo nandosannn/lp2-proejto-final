@@ -2,13 +2,16 @@ import java.sql.Connection;
 import java.util.Scanner;
 
 import db.DB;
-import model.Adm;
+import model.entities.Adm;
+import model.entities.Evento;
+import model.entities.Grupo;
+import model.entities.Solicitante;
+import model.services.AdmGrupo;
 
 public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
         Connection conn = DB.getConnection();
-        Adm adm = new Adm();
 
         Scanner input = new Scanner(System.in);
 
@@ -34,7 +37,7 @@ public class App {
                     System.out.print("Digite a senha: ");
                     String senha = input.nextLine();
                     
-                    if (adm.validarLogin(login, senha)) {
+                    if (Adm.validarLogin(login, senha)) {
                         System.out.println("Login feito com sucesso");
                     }
                     else{

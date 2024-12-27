@@ -1,8 +1,4 @@
-package model;
-
-import model.Grupo;
-import model.Solicitante;
-import model.Transporte;
+package model.entities;
 
 import java.time.LocalDateTime;
 
