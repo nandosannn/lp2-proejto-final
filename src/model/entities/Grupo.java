@@ -18,6 +18,15 @@ public class Grupo {
 
     }
 
+    
+
+    public Grupo(Integer id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
+
+
+
     public Grupo(Integer id, String nome, String nomeCoordenador, String telefoneCoordenador, Integer quantidadeMusicos,
             String user, String senha) {
         this.id = id;

@@ -22,7 +22,23 @@ public class Evento {
     public Evento(){
         
     }
+
     
+    
+    public Evento(Integer id, String nome, String local, LocalDateTime dataHora, Grupo grupo, Status status,
+            Transporte transporte, Solicitante solicitante) {
+        this.id = id;
+        this.nome = nome;
+        this.local = local;
+        this.dataHora = dataHora;
+        this.grupo = grupo;
+        this.status = status;
+        this.transporte = transporte;
+        this.solicitante = solicitante;
+    }
+
+
+
     public Evento(String nome, String local, LocalDateTime dataHora, Grupo grupo, Status status, Transporte transporte,
             Solicitante solicitante) {
         this.nome = nome;
@@ -116,3 +132,4 @@ public class Evento {
                 + grupo + ", status=" + status + ", transporte=" + transporte + ", solicitante=" + solicitante + "]";
     }
 }
+
