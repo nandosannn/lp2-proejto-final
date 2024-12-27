@@ -7,6 +7,7 @@ import model.entities.Evento;
 import model.entities.Grupo;
 import model.entities.Solicitante;
 import model.services.AdmGrupo;
+import model.services.AdmSolicitante;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -28,8 +29,10 @@ public class App {
 
             switch (opcao) {
                 case 1:
+                    AdmSolicitante.imprimirSolicitantes();
                     break;
                 case 2:
+                    AdmGrupo.imprimirGrupos();
                     break;
                 case 3:
                     System.out.print("Digite o login: ");

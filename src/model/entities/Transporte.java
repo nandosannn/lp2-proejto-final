@@ -5,7 +5,20 @@ public class Transporte {
     private String nomeMotorista;
     private String telefone;
     private String modeloVeículo;
-   
+    
+    public Transporte(){
+
+    }
+
+    
+
+    public Transporte(Integer id, String nomeMotorista, String telefone, String modeloVeículo) {
+        this.id = id;
+        this.nomeMotorista = nomeMotorista;
+        this.telefone = telefone;
+        this.modeloVeículo = modeloVeículo;
+    }
+
     public Transporte(String nomeMotorista, String telefone, String modeloVeículo) {
         this.nomeMotorista = nomeMotorista;
         this.telefone = telefone;
@@ -46,3 +59,5 @@ public class Transporte {
                 + ", modeloVeículo=" + modeloVeículo + "]";
     }
 }
+
+
