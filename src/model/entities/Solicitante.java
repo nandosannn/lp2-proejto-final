@@ -13,6 +13,17 @@ public class Solicitante {
 
     }
 
+    public Solicitante(Integer id, String nome, String cargo, String telefone, String email, String user,
+            String senha) {
+        this.id = id;
+        this.nome = nome;
+        this.cargo = cargo;
+        this.telefone = telefone;
+        this.email = email;
+        this.user = user;
+        this.senha = senha;
+    }
+
     public Solicitante(String nome, String cargo, String telefone, String email, String user, String senha) {
         this.nome = nome;
         this.cargo = cargo;
@@ -79,9 +90,6 @@ public class Solicitante {
         return "Solicitante [id=" + id + ", nome=" + nome + ", cargo=" + cargo + ", telefone=" + telefone + ", email="
                 + email + ", user=" + user + ", senha=" + senha + "]";
     }
-
-    
-
-    
-
 }
+
+
