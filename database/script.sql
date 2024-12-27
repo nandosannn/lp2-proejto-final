@@ -58,3 +58,23 @@ ALTER TABLE `evento`
     ALTER `grupo` SET DEFAULT 1,
     ALTER `transporte` SET DEFAULT 1,
     ALTER `solicitante` SET DEFAULT 1;
+
+-- Adicionando colunas de usuário e senha à tabela solicitante
+ALTER TABLE `solicitante`
+ADD COLUMN `usuario` VARCHAR(50) NOT NULL UNIQUE AFTER `email`,
+ADD COLUMN `senha` VARCHAR(255) NOT NULL AFTER `usuario`;
+
+-- Adicionando colunas de usuário e senha à tabela grupo
+ALTER TABLE `grupo`
+ADD COLUMN `usuario` VARCHAR(50) NOT NULL UNIQUE AFTER `quantidade_de_musicos`,
+ADD COLUMN `senha` VARCHAR(255) NOT NULL AFTER `usuario`;
+
+-- Atualizando registros padrão para as novas colunas
+UPDATE `solicitante`
+SET `usuario` = 'usuario_padrao', `senha` = 'senha_padrao'
+WHERE `codigo` = 1;
+
+UPDATE `grupo`
+SET `usuario` = 'grupo_padrao', `senha` = 'senha_padrao'
+WHERE `codigo` = 1;
+
