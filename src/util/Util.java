@@ -173,7 +173,7 @@ public final class Util {
             System.out.println("\n=== Menu Conta Solicitante ===");
             System.out.println("[1] Solicitar apresentações");
             System.out.println("[2] Acompanhar apresentações");
-            System.out.println("[3] Confirmar transporte");
+            System.out.println("[3] Transporte");
             System.out.println("[4] Editar apresentação");
             System.out.println("[5] Sair");
             System.out.print("Escolha uma opção: ");
@@ -188,10 +188,10 @@ public final class Util {
                     AdmSolicitante.acompanharApresentacoes(input);
                     break;
                 case 3:
-                    // confirmarTransporte(input);
+                    AdmSolicitante.menuTransporte(input);
                     break;
                 case 4:
-                    // editarApresentacao(input);
+                    AdmSolicitante.cancelarApresentacao(input);
                     break;
                 case 5:
                     System.out.println("Saindo do menu...");
