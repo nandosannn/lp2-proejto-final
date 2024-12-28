@@ -10,4 +10,6 @@ public class Adm {
     public static boolean validarLogin(String userInput, String senhaInput) {
         return user.equals(userInput) && senha.equals(senhaInput);
     }
+
+    
 }

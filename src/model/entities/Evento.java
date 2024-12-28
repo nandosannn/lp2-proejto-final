@@ -23,8 +23,6 @@ public class Evento {
         
     }
 
-    
-    
     public Evento(Integer id, String nome, String local, LocalDateTime dataHora, Grupo grupo, Status status,
             Transporte transporte, Solicitante solicitante) {
         this.id = id;
@@ -36,8 +34,6 @@ public class Evento {
         this.transporte = transporte;
         this.solicitante = solicitante;
     }
-
-
 
     public Evento(String nome, String local, LocalDateTime dataHora, Grupo grupo, Status status, Transporte transporte,
             Solicitante solicitante) {

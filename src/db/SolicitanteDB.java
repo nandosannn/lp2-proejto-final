@@ -152,4 +152,34 @@ public class SolicitanteDB {
             DB.closeConnection();
         }
     }
+
+    public static Integer verificarLoginESenha(String usuario, String senha) throws Exception {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DB.getConnection(); // Obtém a conexão com o banco de dados
+
+            // SQL para verificar a existência de login e senha
+            String sql = "SELECT * FROM solicitante WHERE usuario = ? AND senha = ?";
+            pst = conn.prepareStatement(sql);
+            pst.setString(1, usuario);
+            pst.setString(2, senha);
+            rs = pst.executeQuery();
+
+            // Se existir um registro correspondente, retorna verdadeiro
+            if (rs.next()) {
+                return rs.getInt("codigo");
+            }
+        } catch (SQLException e) {
+            throw new Exception("Erro ao verificar login e senha: " + e.getMessage());
+        } finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(pst);
+            DB.closeConnection();
+        }
+    
+        return null;
+    }
 }
