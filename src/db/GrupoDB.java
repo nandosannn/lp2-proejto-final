@@ -163,4 +163,35 @@ public class GrupoDB {
             DB.closeConnection();
         }
     }
+
+    // Método para verificar a existência de um user e senha no banco
+public static Integer verificarUsuarioESenha(String user, String senha) throws Exception {
+    Connection conn = null;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    try {
+        conn = DB.getConnection();
+        String sql = "SELECT codigo FROM grupo WHERE usuario = ? AND senha = ?";
+        pst = conn.prepareStatement(sql);
+        pst.setString(1, user);  // Setando o user na consulta
+        pst.setString(2, senha);  // Setando a senha na consulta
+
+        rs = pst.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt("codigo");  // Retorna o id do grupo caso encontre
+        }
+    } catch (SQLException e) {
+        throw new Exception("Erro ao verificar user e senha: " + e.getMessage());
+    } finally {
+        DB.closeResultSet(rs);
+        DB.closeStatement(pst);
+        DB.closeConnection();
+    }
+
+    return null;  // Retorna null se nenhum registro for encontrado
 }
+
+}
+
