@@ -15,17 +15,13 @@ public class DB {
     private static Connection conn = null;
 
     public static Connection getConnection() throws Exception {
-		if (conn == null) {
-			try {
-				Properties props = loadProperties();
-				String url = props.getProperty("dburl");
-				conn = DriverManager.getConnection(url, props);
-			}
-			catch (SQLException e) {
-				throw new Exception(e.getMessage());
-			}
+		try {
+			Properties props = loadProperties();
+			String url = props.getProperty("dburl");
+			return DriverManager.getConnection(url, props); // Retorna sempre uma nova conexão
+		} catch (SQLException e) {
+			throw new Exception("Erro ao obter conexão: " + e.getMessage(), e);
 		}
-		return conn;
 	}
 
     public static void closeConnection() throws Exception {

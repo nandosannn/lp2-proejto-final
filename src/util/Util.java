@@ -98,10 +98,49 @@ public final class Util {
         } while (opcao != 3);
     }
 
+    public static void menuContaSolicitante(Solicitante solicitante, Scanner input) throws Exception {
+        int opcao;
+
+        do {
+            System.out.println("\n=== Menu Conta Solicitante ===");
+            System.out.println("[1] Solicitar apresentações");
+            System.out.println("[2] Acompanhar apresentações");
+            System.out.println("[3] Transporte");
+            System.out.println("[4] Cencelar apresentação");
+            System.out.println("[5] Sair");
+            System.out.print("Escolha uma opção: ");
+
+            opcao = input.nextInt();
+            input.nextLine();
+
+            switch (opcao) {
+                case 1:
+                    AdmSolicitante.cadastrarEvento(solicitante, input);
+                    break;
+                case 2:
+                    AdmSolicitante.acompanharApresentacoes(input);
+                    break;
+                case 3:
+                    AdmSolicitante.menuTransporte(input);
+                    break;
+                case 4:
+                    AdmSolicitante.cancelarApresentacao(input);
+                    break;
+                case 5:
+                    System.out.println("Saindo do menu...");
+                    break;
+                default:
+                    System.out.println("Opção inválida! Tente novamente.");
+            }
+
+        } while (opcao != 5);
+    }
+
     public static void menuGrupo(Scanner input) throws Exception {
         int opcao;
 
         do {
+            System.out.println("\n--- Menu Grupo ---");
             System.out.println("[1] login");
             System.out.println("[2] Cadastrar conta");
             System.out.println("[3] Finalizar");
@@ -166,40 +205,5 @@ public final class Util {
         } while (opcao != 4);
     }
 
-    public static void menuContaSolicitante(Solicitante solicitante, Scanner input) throws Exception {
-        int opcao;
-
-        do {
-            System.out.println("\n=== Menu Conta Solicitante ===");
-            System.out.println("[1] Solicitar apresentações");
-            System.out.println("[2] Acompanhar apresentações");
-            System.out.println("[3] Transporte");
-            System.out.println("[4] Editar apresentação");
-            System.out.println("[5] Sair");
-            System.out.print("Escolha uma opção: ");
-
-            opcao = input.nextInt();
-
-            switch (opcao) {
-                case 1:
-                    AdmSolicitante.cadastrarEvento(solicitante, input);
-                    break;
-                case 2:
-                    AdmSolicitante.acompanharApresentacoes(input);
-                    break;
-                case 3:
-                    AdmSolicitante.menuTransporte(input);
-                    break;
-                case 4:
-                    AdmSolicitante.cancelarApresentacao(input);
-                    break;
-                case 5:
-                    System.out.println("Saindo do menu...");
-                    break;
-                default:
-                    System.out.println("Opção inválida! Tente novamente.");
-            }
-
-        } while (opcao != 5);
-    }
+    
 }

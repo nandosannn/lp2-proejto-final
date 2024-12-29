@@ -26,10 +26,10 @@ public class EventoDB {
 
             // SQL para listar os eventos com os dados relacionados
             String sql = """
-                    SELECT e.codigo, e.nome, e.local, e.horario, e.status, 
-                           g.codigo AS grupo_id, g.nome AS grupo_nome, 
-                           t.codigo AS transporte_id, t.nome_motorista, t.telefone AS transporte_telefone, t.tipo_do_veiculo, 
-                           s.codigo AS solicitante_id, s.nome AS solicitante_nome, s.cargo AS solicitante_cargo, 
+                    SELECT e.codigo, e.nome, e.local, e.horario, e.status,
+                           g.codigo AS grupo_id, g.nome AS grupo_nome,
+                           t.codigo AS transporte_id, t.nome_motorista, t.telefone AS transporte_telefone, t.tipo_do_veiculo,
+                           s.codigo AS solicitante_id, s.nome AS solicitante_nome, s.cargo AS solicitante_cargo,
                            s.telefone AS solicitante_telefone, s.email AS solicitante_email
                     FROM evento e
                     LEFT JOIN grupo g ON e.grupo = g.codigo
@@ -107,16 +107,16 @@ public class EventoDB {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-    
+
         try {
             conn = DB.getConnection(); // Obtém a conexão com o banco de dados
-    
+
             // SQL para listar os eventos com grupo padrão (código 1)
             String sql = """
-                    SELECT e.codigo, e.nome, e.local, e.horario, e.status, 
-                           g.codigo AS grupo_id, g.nome AS grupo_nome, 
-                           t.codigo AS transporte_id, t.nome_motorista, t.telefone AS transporte_telefone, t.tipo_do_veiculo, 
-                           s.codigo AS solicitante_id, s.nome AS solicitante_nome, s.cargo AS solicitante_cargo, 
+                    SELECT e.codigo, e.nome, e.local, e.horario, e.status,
+                           g.codigo AS grupo_id, g.nome AS grupo_nome,
+                           t.codigo AS transporte_id, t.nome_motorista, t.telefone AS transporte_telefone, t.tipo_do_veiculo,
+                           s.codigo AS solicitante_id, s.nome AS solicitante_nome, s.cargo AS solicitante_cargo,
                            s.telefone AS solicitante_telefone, s.email AS solicitante_email
                     FROM evento e
                     LEFT JOIN grupo g ON e.grupo = g.codigo
@@ -124,10 +124,10 @@ public class EventoDB {
                     LEFT JOIN solicitante s ON e.solicitante = s.codigo
                     WHERE g.codigo = 1
                     """;
-    
+
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
-    
+
             // Itera sobre o ResultSet e adiciona os eventos à lista
             while (rs.next()) {
                 // Dados do evento
@@ -135,7 +135,7 @@ public class EventoDB {
                 String nome = rs.getString("nome");
                 String local = rs.getString("local");
                 LocalDateTime dataHora = rs.getTimestamp("horario").toLocalDateTime();
-    
+
                 // Conversão do status de String para Evento.Status
                 Evento.Status status = null;
                 String statusStr = rs.getString("status");
@@ -146,13 +146,13 @@ public class EventoDB {
                         throw new Exception("Status inválido encontrado no banco: " + statusStr);
                     }
                 }
-    
+
                 // Dados do grupo
                 Grupo grupo = null;
                 if (rs.getInt("grupo_id") != 0) {
                     grupo = new Grupo(rs.getInt("grupo_id"), rs.getString("grupo_nome"));
                 }
-    
+
                 // Dados do transporte
                 Transporte transporte = null;
                 if (rs.getInt("transporte_id") != 0) {
@@ -162,7 +162,7 @@ public class EventoDB {
                             rs.getString("transporte_telefone"),
                             rs.getString("tipo_do_veiculo"));
                 }
-    
+
                 // Dados do solicitante
                 Solicitante solicitante = null;
                 if (rs.getInt("solicitante_id") != 0) {
@@ -174,7 +174,7 @@ public class EventoDB {
                             rs.getString("solicitante_email"),
                             null, null);
                 }
-    
+
                 // Criação do evento
                 Evento evento = new Evento(id, nome, local, dataHora, grupo, status, transporte, solicitante);
                 eventos.add(evento);
@@ -186,7 +186,7 @@ public class EventoDB {
             DB.closeStatement(pst);
             DB.closeConnection();
         }
-    
+
         return eventos;
     }
 
@@ -195,16 +195,17 @@ public class EventoDB {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
-    
+
         try {
             conn = DB.getConnection(); // Obtém a conexão com o banco de dados
-    
-            // SQL para listar os eventos com grupo diferente do padrão (código diferente de 1)
+
+            // SQL para listar os eventos com grupo diferente do padrão (código diferente de
+            // 1)
             String sql = """
-                    SELECT e.codigo, e.nome, e.local, e.horario, e.status, 
-                           g.codigo AS grupo_id, g.nome AS grupo_nome, 
-                           t.codigo AS transporte_id, t.nome_motorista, t.telefone AS transporte_telefone, t.tipo_do_veiculo, 
-                           s.codigo AS solicitante_id, s.nome AS solicitante_nome, s.cargo AS solicitante_cargo, 
+                    SELECT e.codigo, e.nome, e.local, e.horario, e.status,
+                           g.codigo AS grupo_id, g.nome AS grupo_nome,
+                           t.codigo AS transporte_id, t.nome_motorista, t.telefone AS transporte_telefone, t.tipo_do_veiculo,
+                           s.codigo AS solicitante_id, s.nome AS solicitante_nome, s.cargo AS solicitante_cargo,
                            s.telefone AS solicitante_telefone, s.email AS solicitante_email
                     FROM evento e
                     LEFT JOIN grupo g ON e.grupo = g.codigo
@@ -212,10 +213,10 @@ public class EventoDB {
                     LEFT JOIN solicitante s ON e.solicitante = s.codigo
                     WHERE g.codigo != 1
                     """;
-    
+
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
-    
+
             // Itera sobre o ResultSet e adiciona os eventos à lista
             while (rs.next()) {
                 // Dados do evento
@@ -223,7 +224,7 @@ public class EventoDB {
                 String nome = rs.getString("nome");
                 String local = rs.getString("local");
                 LocalDateTime dataHora = rs.getTimestamp("horario").toLocalDateTime();
-    
+
                 // Conversão do status de String para Evento.Status
                 Evento.Status status = null;
                 String statusStr = rs.getString("status");
@@ -234,13 +235,13 @@ public class EventoDB {
                         throw new Exception("Status inválido encontrado no banco: " + statusStr);
                     }
                 }
-    
+
                 // Dados do grupo
                 Grupo grupo = null;
                 if (rs.getInt("grupo_id") != 0) {
                     grupo = new Grupo(rs.getInt("grupo_id"), rs.getString("grupo_nome"));
                 }
-    
+
                 // Dados do transporte
                 Transporte transporte = null;
                 if (rs.getInt("transporte_id") != 0) {
@@ -250,7 +251,7 @@ public class EventoDB {
                             rs.getString("transporte_telefone"),
                             rs.getString("tipo_do_veiculo"));
                 }
-    
+
                 // Dados do solicitante
                 Solicitante solicitante = null;
                 if (rs.getInt("solicitante_id") != 0) {
@@ -262,7 +263,7 @@ public class EventoDB {
                             rs.getString("solicitante_email"),
                             null, null);
                 }
-    
+
                 // Criação do evento
                 Evento evento = new Evento(id, nome, local, dataHora, grupo, status, transporte, solicitante);
                 eventos.add(evento);
@@ -274,7 +275,7 @@ public class EventoDB {
             DB.closeStatement(pst);
             DB.closeConnection();
         }
-    
+
         return eventos;
     }
 
@@ -287,10 +288,10 @@ public class EventoDB {
         try {
             conn = DB.getConnection();
             String sql = """
-                    SELECT e.codigo, e.nome, e.local, e.horario, e.status, 
-                           g.codigo AS grupo_id, g.nome AS grupo_nome, 
-                           t.codigo AS transporte_id, t.nome_motorista, t.telefone AS transporte_telefone, t.tipo_do_veiculo, 
-                           s.codigo AS solicitante_id, s.nome AS solicitante_nome, s.cargo AS solicitante_cargo, 
+                    SELECT e.codigo, e.nome, e.local, e.horario, e.status,
+                           g.codigo AS grupo_id, g.nome AS grupo_nome,
+                           t.codigo AS transporte_id, t.nome_motorista, t.telefone AS transporte_telefone, t.tipo_do_veiculo,
+                           s.codigo AS solicitante_id, s.nome AS solicitante_nome, s.cargo AS solicitante_cargo,
                            s.telefone AS solicitante_telefone, s.email AS solicitante_email
                     FROM evento e
                     LEFT JOIN grupo g ON e.grupo = g.codigo
@@ -357,6 +358,8 @@ public class EventoDB {
 
         try {
             conn = DB.getConnection();
+            conn.setAutoCommit(false); // Desabilita o commit automático
+
             String sql = """
                     INSERT INTO evento (nome, local, horario, grupo, status, transporte, solicitante)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -371,7 +374,11 @@ public class EventoDB {
             pst.setInt(7, evento.getSolicitante().getId());
 
             pst.executeUpdate();
+            conn.commit(); // Confirma a transação
         } catch (SQLException e) {
+            if (conn != null) {
+                conn.rollback(); // Reverte a transação em caso de erro
+            }
             throw new Exception("Erro ao inserir evento: " + e.getMessage());
         } finally {
             DB.closeStatement(pst);

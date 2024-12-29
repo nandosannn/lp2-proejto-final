@@ -18,7 +18,7 @@ public class AdmSolicitante {
 
     public static void imprimirSolicitantes() throws Exception {
         List<Solicitante> solicitantes = SolicitanteDB.listarSolicitantes();
-
+        System.out.println("=== TODOS SOLICITANTES CADASTRADOS ===");
         for (Solicitante solicitante : solicitantes) {
             System.out.println("Código: " + solicitante.getId());
             System.out.println("Nome: " + solicitante.getNome());
@@ -30,12 +30,13 @@ public class AdmSolicitante {
             System.out.println("-------------------------------");
         }
     }
-
+    
+    /*=== Login ===*/
     public static Integer autenticacaoLoginSolicitante(Scanner input) throws Exception {
 
         System.out.println("User: ");
         String user = input.nextLine();
-        System.out.println("User: ");
+        System.out.println("Senha: ");
         String senha = input.nextLine();
 
         return SolicitanteDB.verificarLoginESenha(user, senha);
@@ -46,11 +47,12 @@ public class AdmSolicitante {
         if (solicitante == null) {
             System.out.println("Usuário ou senha incorretos!");
         } else {
-            System.out.println("Grupo: código " + solicitante + " logado com sucesso!");
+            System.out.println("Solicitante: código " + solicitante + " logado com sucesso!");
             Util.menuContaSolicitante(SolicitanteDB.procurarSolicitantePorId(solicitante), input);
         }
     }
 
+     /*=== Cadastro Solicitante ===*/
     public static void cadastrarSolicitante(Scanner input) {
         try {
             System.out.println("=== Cadastro de Solicitante ===");
@@ -85,6 +87,8 @@ public class AdmSolicitante {
         }
     }
 
+    /*=== Menu conta Solicitante===*/
+
     public static void cadastrarEvento(Solicitante solicitante, Scanner input) {
         try {
             System.out.println("\n=== Cadastrar Evento ===");
@@ -101,7 +105,7 @@ public class AdmSolicitante {
 
             // Cria o evento com os dados informados e padrão
             Evento evento = new Evento(nome, local, dataHora, null, Evento.Status.PENDENTE, null, solicitante);
-
+            System.out.println(evento.getNome() + " - " + evento.getLocal());
             // Insere o evento no banco de dados
             EventoDB.inserir(evento);
 
@@ -122,6 +126,7 @@ public class AdmSolicitante {
         System.out.println("Escolha uma opção: ");
 
         opcao = input.nextInt();
+        input.nextLine();
 
         switch (opcao) {
             case 1:
@@ -166,7 +171,8 @@ public class AdmSolicitante {
         }
 
     }
-//----------------------------------------------- TRANSPORTE --------------------------------------------------//
+
+    /*=== Menu Transporte ===*/
     public static void menuTransporte(Scanner input) throws Exception {
         int opcao;
 
@@ -177,6 +183,7 @@ public class AdmSolicitante {
 
         System.out.println("Digite a opcao: ");
         opcao = input.nextInt();
+        input.nextLine();
 
         switch (opcao) {
             case 1:
@@ -270,9 +277,7 @@ public class AdmSolicitante {
         }
     }
 
-    //------------------------------------------------- TRANSPORTE ---------------------------------------------------//
-
-    //----------------------------------------------- CANCELAR EVENTO --------------------------------------------------//
+    /*=== Cancelar Evento ===*/
 
     public static void cancelarApresentacao(Scanner input) throws Exception {
         // Solicita o código do evento a ser cancelado
