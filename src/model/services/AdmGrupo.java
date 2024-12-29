@@ -3,8 +3,11 @@ package model.services;
 import java.util.List;
 import java.util.Scanner;
 
+import db.EventoDB;
 import db.GrupoDB;
+import model.entities.Evento;
 import model.entities.Grupo;
+import util.Util;
 
 public class AdmGrupo {
 
@@ -25,9 +28,9 @@ public class AdmGrupo {
 
     public static Integer autenticacaoLogin(Scanner input) throws Exception {
 
-        System.out.println("User: ");
+        System.out.print("User: ");
         String user = input.nextLine();
-        System.out.println("User: ");
+        System.out.print("Senha: ");
         String senha = input.nextLine();
 
         return GrupoDB.verificarUsuarioESenha(user, senha);
@@ -39,7 +42,7 @@ public class AdmGrupo {
             System.out.println("Usuário ou senha incorretos!");
         } else {
             System.out.println("Grupo: código " + grupo + " logado com sucesso!");
-
+            Util.menuContaGrupo(GrupoDB.procurarPorId(grupo), input);
         }
     }
 
@@ -83,6 +86,82 @@ public class AdmGrupo {
         } catch (Exception e) {
             System.err.println("Erro ao cadastrar grupo: " + e.getMessage());
         }
+    }
+
+    /* === Menu conta grupo === */
+    public static void listarEventosAbertos() throws Exception {
+        List<Evento> eventos = EventoDB.listarEventosAbertos();
+
+        if (eventos.isEmpty()) {
+            System.out.println("Nenhum evento encontrado.");
+        } else {
+            for (Evento evento : eventos) {
+                System.out.println("ID: " + evento.getId());
+                System.out.println("Nome: " + evento.getNome());
+                System.out.println("Local: " + evento.getLocal());
+                System.out.println("Data e Hora: " + evento.getDataHora());
+                System.out.println("Status: " + evento.getStatus());
+                System.out.println("Aguardando disponibilidade de grupo!");
+                System.out.println("-------------------------------------");
+            }
+        }
+    }
+
+    public static void confirmarDisponibilidade(Grupo grupo, Scanner input) throws Exception {
+        System.out.print("Digite o código do evento que deseja cancelar: ");
+        int eventoId = input.nextInt();
+        input.nextLine();
+
+        Evento evento = EventoDB.procurarPorId(eventoId);
+
+        if (evento == null) {
+            System.out.println("Evento não encontrado!");
+            return;
+        }
+
+        if (evento.getStatus() != Evento.Status.PENDENTE) {
+            System.out.println("Evento cancelado ou confirmado!");
+        }
+
+        evento.setGrupo(grupo);
+
+        EventoDB.atualizar(evento);
+
+        System.out.println("Evento '" + evento.getNome() + "' foi CONFIRMADO com sucesso!");
+
+    }
+
+    public static void acompanharEventosGrupo(Grupo grupo) throws Exception {
+        List<Evento> eventos = EventoDB.listarEventosPorGrupo(grupo.getId());
+
+        if (eventos.isEmpty()) {
+            System.out.println("Nenhum evento encontrado!");
+        } else {
+            for (Evento evento : eventos) {
+                // Imprime os atributos do evento
+                System.out.println("Código do Evento: " + evento.getId());
+                System.out.println("Nome do Evento: " + evento.getNome());
+                System.out.println("Local do Evento: " + evento.getLocal());
+                System.out.println("Data e Hora do Evento: " + evento.getDataHora());
+                System.out.println("Status do Evento: " + evento.getStatus());
+                System.out.println("Grupo: " + grupo.getNome());
+
+                // Imprime os dados do transporte
+                String disponibilidade = "Aguardando confirmação de transporte";
+                if (disponibilidade.equalsIgnoreCase(evento.getTransporte().getNomeMotorista())) {
+                    System.out.println("Aguardando confirmação de Transporte");
+                }
+                else{
+                    System.out.println("Nome do Motorista: " + evento.getTransporte().getNomeMotorista());
+                }
+
+                // Imprime os dados do solicitante
+                System.out.println("Solicitante: " + evento.getSolicitante().getNome());
+
+                System.out.println("====================================="); // Linha de separação entre eventos
+            }
+        }
+
     }
 
 }
