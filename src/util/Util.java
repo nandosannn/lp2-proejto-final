@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.Scanner;
 
 import model.entities.Adm;
+import model.entities.Grupo;
 import model.entities.Solicitante;
 import model.services.AdmGrupo;
 import model.services.AdmSolicitante;
@@ -43,6 +44,7 @@ public final class Util {
 
                         if (Adm.validarLogin(login, senha)) {
                             System.out.println("Login feito com sucesso");
+                            menuAdm(input);
                         } else {
                             System.out.println("Acesso negado!");
                         }
@@ -60,6 +62,49 @@ public final class Util {
                 opcao = -1; // Garante que o loop continue
             }
         } while (opcao != 4);
+    }
+
+    public static void menuAdm(Scanner input) throws Exception {
+        int opcao;
+
+        do {
+            System.out.println("\n=== Menu Adm ===");
+            System.out.println("[1] Lista todas apresentações");
+            System.out.println("[2] Confirmar apresentação");
+            System.out.println("[3] Relatórios");
+            System.out.println("[4] Finalizar");
+
+            System.out.print("Digite o número da operação: ");
+
+            if (input.hasNextInt()) {
+                opcao = input.nextInt();
+                input.nextLine(); // Consome a quebra de linha
+
+                switch (opcao) {
+                    case 1:
+                        Adm.listaTodasApresentacoes();
+                        break;
+                    case 2:
+                        Adm.confirmarApresentacoes(input);
+                        break;
+                    case 3:
+                        menuAdmRelatorios(input);
+                        break;
+                    case 4:
+                        System.out.println("Saindo...");
+                        break;
+                    default:
+                        System.out.println("Opcão invalida.");
+                        break;
+                }
+            } else {
+                System.out.println("Entrada inválida. Por favor, insira um número.");
+                input.next(); // Consome a entrada inválida
+                opcao = -1; // Garante que o loop continue
+            }
+
+        } while (opcao != 4);
+
     }
 
     public static void menuSolicitante(Scanner input) throws Exception {
@@ -172,11 +217,12 @@ public final class Util {
         } while (opcao != 3);
     }
 
-    public static void menuContaGrupo(Scanner input) {
+    public static void menuContaGrupo(Grupo grupo, Scanner input) throws Exception {
         int opcao;
 
+        System.out.println("Bem vindo " + grupo.getNome() + "!");
         do {
-            System.out.println("\nMenu de Eventos");
+            System.out.println("\nMenu de Grupo");
             System.out.println("[1] Eventos Abertos");
             System.out.println("[2] Confirmar Disponibilidade");
             System.out.println("[3] Acompanhar Eventos");
@@ -188,13 +234,13 @@ public final class Util {
 
             switch (opcao) {
                 case 1:
-                    // listarEventosAbertos();
+                    AdmGrupo.listarEventosAbertos();
                     break;
                 case 2:
-                    // confirmarDisponibilidade(input);
+                    AdmGrupo.confirmarDisponibilidade(grupo, input);
                     break;
                 case 3:
-                    // acompanharEventos();
+                    AdmGrupo.acompanharEventosGrupo(grupo);
                     break;
                 case 4:
                     System.out.println("Retornando ao menu principal...");
@@ -205,5 +251,47 @@ public final class Util {
         } while (opcao != 4);
     }
 
-    
+    public static void menuAdmRelatorios(Scanner input) throws Exception {
+        int opcao;
+
+        do {
+            System.out.println("\n=== Opcões de Relatórios ===");
+            System.out.println("[1] Eventos por mês");
+            System.out.println("[2] Eventos sem grupo confirmado");
+            System.out.println("[3] Evento com grupo confirmado");
+            System.out.println("[4] Eventos abertos");
+            System.out.println("[5] Evento por grupo");
+            System.out.println("[6] Sair");
+            System.out.print("Digite o número da operação: ");
+
+            opcao = input.nextInt();
+            input.nextLine(); // Consome o restante da linha
+
+            switch (opcao) {
+                case 1:
+                    Adm.eventoPorMes(input);
+                    break;
+                case 2:
+                    Adm.eventoGrupoNaoConfirmado();
+                    break;
+                case 3:
+                    Adm.eventoGrupoConfirmado();
+                    break;
+                case 4:
+                    Adm.eventoAbertos();
+                    break;
+                case 5:
+                    Adm.eventoPorGrupo(input);
+                    break;
+                case 6:
+                    System.out.println("Saindo...");
+                    break;
+
+                default:
+                System.out.println("Opcao invalida!");
+                    break;
+            }
+
+        } while (opcao != 6);
+    }
 }

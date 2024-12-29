@@ -102,6 +102,99 @@ public class EventoDB {
         return eventos;
     }
 
+    public static List<Evento> listarEventosPorMes(int mes) throws Exception {
+        if (mes < 1 || mes > 12) {
+            throw new IllegalArgumentException("O mês deve ser um valor entre 1 e 12.");
+        }
+    
+        List<Evento> eventos = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+    
+        try {
+            conn = DB.getConnection(); // Obtém a conexão com o banco de dados
+    
+            // SQL para listar os eventos com os dados relacionados ao mês especificado
+            String sql = """
+                    SELECT e.codigo, e.nome, e.local, e.horario, e.status,
+                           g.codigo AS grupo_id, g.nome AS grupo_nome,
+                           t.codigo AS transporte_id, t.nome_motorista, t.telefone AS transporte_telefone, t.tipo_do_veiculo,
+                           s.codigo AS solicitante_id, s.nome AS solicitante_nome, s.cargo AS solicitante_cargo,
+                           s.telefone AS solicitante_telefone, s.email AS solicitante_email
+                    FROM evento e
+                    LEFT JOIN grupo g ON e.grupo = g.codigo
+                    LEFT JOIN transporte t ON e.transporte = t.codigo
+                    LEFT JOIN solicitante s ON e.solicitante = s.codigo
+                    WHERE MONTH(e.horario) = ?
+                    """;
+    
+            pst = conn.prepareStatement(sql);
+            pst.setInt(1, mes); // Define o mês no SQL como o valor do parâmetro
+            rs = pst.executeQuery();
+    
+            // Itera sobre o ResultSet e adiciona os eventos à lista
+            while (rs.next()) {
+                // Dados do evento
+                Integer id = rs.getInt("codigo");
+                String nome = rs.getString("nome");
+                String local = rs.getString("local");
+                LocalDateTime dataHora = rs.getTimestamp("horario").toLocalDateTime();
+    
+                // Conversão do status de String para Evento.Status
+                Evento.Status status = null;
+                String statusStr = rs.getString("status");
+                if (statusStr != null && !statusStr.isEmpty()) {
+                    try {
+                        status = Evento.Status.valueOf(statusStr.trim().toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        throw new Exception("Status inválido encontrado no banco: " + statusStr);
+                    }
+                }
+    
+                // Dados do grupo
+                Grupo grupo = null;
+                if (rs.getInt("grupo_id") != 0) {
+                    grupo = new Grupo(rs.getInt("grupo_id"), rs.getString("grupo_nome"));
+                }
+    
+                // Dados do transporte
+                Transporte transporte = null;
+                if (rs.getInt("transporte_id") != 0) {
+                    transporte = new Transporte(
+                            rs.getInt("transporte_id"),
+                            rs.getString("nome_motorista"),
+                            rs.getString("transporte_telefone"),
+                            rs.getString("tipo_do_veiculo"));
+                }
+    
+                // Dados do solicitante
+                Solicitante solicitante = null;
+                if (rs.getInt("solicitante_id") != 0) {
+                    solicitante = new Solicitante(
+                            rs.getInt("solicitante_id"),
+                            rs.getString("solicitante_nome"),
+                            rs.getString("solicitante_cargo"),
+                            rs.getString("solicitante_telefone"),
+                            rs.getString("solicitante_email"),
+                            null, null);
+                }
+    
+                // Criação do evento
+                Evento evento = new Evento(id, nome, local, dataHora, grupo, status, transporte, solicitante);
+                eventos.add(evento);
+            }
+        } catch (SQLException e) {
+            throw new Exception("Erro ao listar eventos: " + e.getMessage());
+        } finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(pst);
+            DB.closeConnection();
+        }
+    
+        return eventos;
+    }
+
     public static List<Evento> listarEventosComGrupoPadrao() throws Exception {
         List<Evento> eventos = new ArrayList<>();
         Connection conn = null;
@@ -278,6 +371,184 @@ public class EventoDB {
 
         return eventos;
     }
+
+    public static List<Evento> listarEventosAbertos() throws Exception {
+        List<Evento> eventos = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+    
+        try {
+            conn = DB.getConnection(); // Obtém a conexão com o banco de dados
+    
+            // SQL para listar os eventos com grupo padrão (código 1) e status PENDENTE
+            String sql = """
+                    SELECT e.codigo, e.nome, e.local, e.horario, e.status,
+                           g.codigo AS grupo_id, g.nome AS grupo_nome,
+                           t.codigo AS transporte_id, t.nome_motorista, t.telefone AS transporte_telefone, t.tipo_do_veiculo,
+                           s.codigo AS solicitante_id, s.nome AS solicitante_nome, s.cargo AS solicitante_cargo,
+                           s.telefone AS solicitante_telefone, s.email AS solicitante_email
+                    FROM evento e
+                    LEFT JOIN grupo g ON e.grupo = g.codigo
+                    LEFT JOIN transporte t ON e.transporte = t.codigo
+                    LEFT JOIN solicitante s ON e.solicitante = s.codigo
+                    WHERE e.grupo = 1 AND e.status = 'PENDENTE'
+                    """;
+    
+            pst = conn.prepareStatement(sql);
+            rs = pst.executeQuery();
+    
+            // Itera sobre o ResultSet e adiciona os eventos à lista
+            while (rs.next()) {
+                // Dados do evento
+                Integer id = rs.getInt("codigo");
+                String nome = rs.getString("nome");
+                String local = rs.getString("local");
+                LocalDateTime dataHora = rs.getTimestamp("horario").toLocalDateTime();
+    
+                // Conversão do status de String para Evento.Status
+                Evento.Status status = null;
+                String statusStr = rs.getString("status");
+                if (statusStr != null && !statusStr.isEmpty()) {
+                    try {
+                        status = Evento.Status.valueOf(statusStr.trim().toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        throw new Exception("Status inválido encontrado no banco: " + statusStr);
+                    }
+                }
+    
+                // Dados do grupo
+                Grupo grupo = null;
+                if (rs.getInt("grupo_id") != 0) {
+                    grupo = new Grupo(rs.getInt("grupo_id"), rs.getString("grupo_nome"));
+                }
+    
+                // Dados do transporte
+                Transporte transporte = null;
+                if (rs.getInt("transporte_id") != 0) {
+                    transporte = new Transporte(
+                            rs.getInt("transporte_id"),
+                            rs.getString("nome_motorista"),
+                            rs.getString("transporte_telefone"),
+                            rs.getString("tipo_do_veiculo"));
+                }
+    
+                // Dados do solicitante
+                Solicitante solicitante = null;
+                if (rs.getInt("solicitante_id") != 0) {
+                    solicitante = new Solicitante(
+                            rs.getInt("solicitante_id"),
+                            rs.getString("solicitante_nome"),
+                            rs.getString("solicitante_cargo"),
+                            rs.getString("solicitante_telefone"),
+                            rs.getString("solicitante_email"),
+                            null, null);
+                }
+    
+                // Criação do evento
+                Evento evento = new Evento(id, nome, local, dataHora, grupo, status, transporte, solicitante);
+                eventos.add(evento);
+            }
+        } catch (SQLException e) {
+            throw new Exception("Erro ao listar eventos com grupo padrão e status PENDENTE: " + e.getMessage());
+        } finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(pst);
+            DB.closeConnection();
+        }
+    
+        return eventos;
+    }
+
+    public static List<Evento> listarEventosPorGrupo(int grupoCodigo) throws Exception {
+        List<Evento> eventos = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DB.getConnection(); // Obtém a conexão com o banco de dados
+
+            // SQL para listar os eventos de um grupo específico
+            String sql = """
+                    SELECT e.codigo, e.nome, e.local, e.horario, e.status,
+                           g.codigo AS grupo_id, g.nome AS grupo_nome,
+                           t.codigo AS transporte_id, t.nome_motorista, t.telefone AS transporte_telefone, t.tipo_do_veiculo,
+                           s.codigo AS solicitante_id, s.nome AS solicitante_nome, s.cargo AS solicitante_cargo,
+                           s.telefone AS solicitante_telefone, s.email AS solicitante_email
+                    FROM evento e
+                    LEFT JOIN grupo g ON e.grupo = g.codigo
+                    LEFT JOIN transporte t ON e.transporte = t.codigo
+                    LEFT JOIN solicitante s ON e.solicitante = s.codigo
+                    WHERE e.grupo = ?
+                    """;
+
+            pst = conn.prepareStatement(sql);
+            pst.setInt(1, grupoCodigo); // Define o grupo no SQL como o valor do parâmetro
+            rs = pst.executeQuery();
+
+            // Itera sobre o ResultSet e adiciona os eventos à lista
+            while (rs.next()) {
+                // Dados do evento
+                Integer id = rs.getInt("codigo");
+                String nome = rs.getString("nome");
+                String local = rs.getString("local");
+                LocalDateTime dataHora = rs.getTimestamp("horario").toLocalDateTime();
+
+                // Conversão do status de String para Evento.Status
+                Evento.Status status = null;
+                String statusStr = rs.getString("status");
+                if (statusStr != null && !statusStr.isEmpty()) {
+                    try {
+                        status = Evento.Status.valueOf(statusStr.trim().toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        throw new Exception("Status inválido encontrado no banco: " + statusStr);
+                    }
+                }
+
+                // Dados do grupo
+                Grupo grupo = null;
+                if (rs.getInt("grupo_id") != 0) {
+                    grupo = new Grupo(rs.getInt("grupo_id"), rs.getString("grupo_nome"));
+                }
+
+                // Dados do transporte
+                Transporte transporte = null;
+                if (rs.getInt("transporte_id") != 0) {
+                    transporte = new Transporte(
+                            rs.getInt("transporte_id"),
+                            rs.getString("nome_motorista"),
+                            rs.getString("transporte_telefone"),
+                            rs.getString("tipo_do_veiculo"));
+                }
+
+                // Dados do solicitante
+                Solicitante solicitante = null;
+                if (rs.getInt("solicitante_id") != 0) {
+                    solicitante = new Solicitante(
+                            rs.getInt("solicitante_id"),
+                            rs.getString("solicitante_nome"),
+                            rs.getString("solicitante_cargo"),
+                            rs.getString("solicitante_telefone"),
+                            rs.getString("solicitante_email"),
+                            null, null);
+                }
+
+                // Criação do evento
+                Evento evento = new Evento(id, nome, local, dataHora, grupo, status, transporte, solicitante);
+                eventos.add(evento);
+            }
+        } catch (SQLException e) {
+            throw new Exception("Erro ao listar eventos do grupo: " + e.getMessage());
+        } finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(pst);
+            DB.closeConnection();
+        }
+
+        return eventos;
+    }
+    
 
     public static Evento procurarPorId(Integer id) throws Exception {
         Evento evento = null;
