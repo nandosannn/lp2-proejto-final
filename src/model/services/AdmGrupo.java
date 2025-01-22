@@ -108,7 +108,7 @@ public class AdmGrupo {
     }
 
     public static void confirmarDisponibilidade(Grupo grupo, Scanner input) throws Exception {
-        System.out.print("Digite o código do evento que deseja cancelar: ");
+        System.out.print("Digite o código do evento que deseja confirmar: ");
         int eventoId = input.nextInt();
         input.nextLine();
 
