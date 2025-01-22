@@ -1,1 +1,1 @@
-# lp2-proejto-final
+# lp2-projto-final
