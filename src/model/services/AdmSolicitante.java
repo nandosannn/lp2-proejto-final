@@ -236,6 +236,7 @@ public class AdmSolicitante {
             for (Transporte list : transportes) {
                 System.out.println("Codigo: " + list.getId());
                 System.out.println("Nome do Motorista: " + list.getNomeMotorista());
+                System.out.println("Modelo do Veículo: " + list.getModeloVeículo());
                 System.out.println("------------------------");
             }
         }
