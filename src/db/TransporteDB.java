@@ -32,6 +32,7 @@ public class TransporteDB {
                 String modeloVeiculo = rs.getString("tipo_do_veiculo");
 
                 Transporte transporte = new Transporte(nomeMotorista, telefone, modeloVeiculo);
+                transporte.setId(id);
                 transportes.add(transporte);
             }
         } catch (SQLException e) {
@@ -87,12 +88,21 @@ public class TransporteDB {
 
             // SQL para inserir novo transporte
             String sql = "INSERT INTO transporte (nome_motorista, telefone, tipo_do_veiculo) VALUES (?, ?, ?)";
-            pst = conn.prepareStatement(sql);
+            pst = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);  // Importante para capturar o ID gerado
             pst.setString(1, transporte.getNomeMotorista());
             pst.setString(2, transporte.getTelefone());
             pst.setString(3, transporte.getModeloVeículo());
 
-            pst.executeUpdate();
+            pst.executeUpdate();  // Executa a inserção
+
+            // Recupera o ID gerado automaticamente
+            try (ResultSet rs = pst.getGeneratedKeys()) {
+                if (rs.next()) {
+                    int generatedId = rs.getInt(1);  // Obtém o ID gerado
+                    transporte.setId(generatedId);  // Define o ID no objeto Transporte
+                }
+            }
+
         } catch (SQLException e) {
             throw new Exception("Erro ao inserir transporte: " + e.getMessage());
         } finally {
