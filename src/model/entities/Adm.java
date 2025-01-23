@@ -79,7 +79,7 @@ public class Adm {
             System.out.println("Local do Evento: " + list.getLocal());
             System.out.println("Data e Hora do Evento: " + list.getDataHora());
             System.out.println("Status do Evento: " + list.getStatus());
-            System.out.println("Grupo: " + list.getNome());
+            System.out.println("Grupo: " + list.getGrupo().getNome());
 
             // Imprime os dados do transporte
             String disponibilidade = "Aguardando confirmação de transporte";
